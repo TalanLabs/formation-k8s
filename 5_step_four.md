@@ -1,5 +1,18 @@
-# Configmap
+# Découpler la configuration
 
+## Objectif 
+
+* comprendre la différence en un configmap et un secret
+* manipuler et utiliser les configmap et secrets
+
+
+## Configmap et Secret
+
+TODO
+
+## Configmap 
+
+Création d'un configmap `app-config` pour stocker la clé/valeur `PORT=4000`  
 
 ```bash
 kubectl create configmap app-config --from-literal=PORT=4000 --dry-run=client -o yaml > config.yaml
@@ -13,12 +26,14 @@ metadata:
   name: language
 
 ```
+
 ```bash
 k create -f config.yaml
 
 configmap/app-config created
 ```
 
+Lister les configmaps
 
 ```bash
 k get configmaps
@@ -26,7 +41,9 @@ k get configmaps
 NAME               DATA   AGE
 app-config         1      97s
 kube-root-ca.crt   1      4d18h
-``` 
+```
+
+Afficher le contenu d'un confimap
 
 ```bash
 Name:         app-config
@@ -68,6 +85,8 @@ spec:
   restartPolicy: Never
 ```
 
+> Nb: cette image affiche les variables d'environnement et s'arrête immédiatement
+
 ```bash
 k create -f pod.yaml
 ```
@@ -90,11 +109,13 @@ PORT=4000
 MYNGINX_SERVICE_HOST=172.17.24.238
 TERM=xterm
 ```
-
+On a bien la variable d'environnement `PORT` qui a été ajoutée 
 
 
 ## Secret 
 
+
+Créer un secret `apikey` avec une valeur à ne pas divulguer
 
 ```bash
 k create secret generic apikey --from-literal=API_KEY=123–456 --dry-run=client -o yaml > secret.yaml
@@ -106,6 +127,7 @@ k create -f secret.yaml
 secret/apikey created
 ```
 
+Afficher le secret 
 
 ```bash
 k get secret apikey
@@ -113,6 +135,10 @@ k get secret apikey
 NAME     TYPE     DATA   AGE
 apikey   Opaque   1      8s
 ```
+
+> Nb: le type est `Opaque` 
+
+Afficher le contenu du secret
 
 ```bash
 k describe secret apikey
@@ -127,6 +153,11 @@ Data
 ====
 API_KEY:  9 bytes
 ```
+
+> On ne voit pas le contenu du secret généré
+
+
+Injectons le secret dans un container 
 
 ```yaml
 apiVersion: v1
@@ -147,6 +178,7 @@ spec:
   restartPolicy: Never
 ```
 
+Affichage des logs
 
 ```bash
 k logs test-env
@@ -167,4 +199,11 @@ KUBERNETES_PORT_443_TCP_PROTO=tcp
 API_KEY=123–456
 ```
 
-!NB : la valeur du secret est visible ! 
+!NB : la valeur du secret est visible ! D'où l'importance de limiter les droits dans un cluster...
+
+
+## Exercice
+
+* déployer une base de données (Postgres ou redis) et utiliser les configmap et secrets
+* déployer une application node qui se connecte à la base de données crée 
+

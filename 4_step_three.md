@@ -1,8 +1,19 @@
-# Service
+# Service 
+
+## Objectif 
+
+* comprendre l'usage d'un service
+* manipuler et configurer des services
+
+## Service
+
+TODO : schema
 
 La notion de service est une couche d'astraction qui permet d'exposer une application qui tourne sur plusieurs noeuds
 
+Les pods peuvent être créés et détruits par les déploiements, mais pour la communication entre les applications, il faut un moyen de découvrir les autres Pods de façon dynamique
 
+## Exposer nos pods Nginx 
 
 Création d'un service qui expose le port  `80` pour notre application `myngninx`
 
@@ -28,6 +39,8 @@ spec:
 status:
   loadBalancer: {}
 ```
+
+> Nb: le service va cibler les pods via les labels, ici `app: myngninx` 
 
 ```bash
 k create -f service.yaml
@@ -114,5 +127,31 @@ timeout
 
 => le réseau n'est pas accessible depuis l'extérieur du cluster avec un service de type `ClusterIp` 
 
+## Les différents type de service 
+
+
+### ClusterIP: 
+
+Expose le service sur une IP interne au cluster. Le choix de cette valeur rend le service uniquement accessible à partir du cluster. Il s'agit du ServiceType par défaut.
+
+### NodePort
+
+Expose le service sur l'IP de chaque nœud sur un port statique (le NodePort). Un service ClusterIP, vers lequel le service NodePort est automatiquement créé. Vous pourrez contacter le service NodePort, depuis l'extérieur du cluster, en demandant <NodeIP>: <NodePort>.
+
+### LoadBalancer 
+
+Expose le service en externe à l'aide de l'équilibreur de charge d'un fournisseur de cloud. Les services NodePort et ClusterIP, vers lesquels les itinéraires de l'équilibreur de charge externe, sont automatiquement créés.
+
+
+### ExternalName 
+
+Mappe le service au contenu du champ externalName (par exemple foo.bar.example.com), en renvoyant un enregistrement CNAME avec sa valeur. Aucun proxy d'aucune sorte n'est mis en place.
+
+
+## Exercices 
+
+
+* exposer l'application pour qu'elle soit accessible depuis la machine host
+* déployer une application B en Node qui appelle la 1ère application
 
 

@@ -1,24 +1,25 @@
-# Setup local K8
+# Installation d'un cluster K8 en local
 
-Création d'un cluster K8 local pour pratiquer la manipulation des ressources
+## Objectif 
+
+Création d'un cluster K8 local pour manipuler des ressources
 
 
-### Vagrant (recommandé) 
+### Option 1 : Vagrant (recommandé) 
 
 TODO : schema nodes dans vagrant 
 
+A défaut d'avoir des machines physiques, Vagrant nous permet de créer des VM pour chaque noeud de notre cluster 
 
-[Installation Vagrant](https://developer.hashicorp.com/vagrant)
-
-CKA/CKAD/CKS Certification Practice Environment 
-
-[Vagrant + Kubeadm](https://github.com/techiescamp/vagrant-kubeadm-kubernetes)
+Prérequis: 
+* [Installation Vagrant](https://developer.hashicorp.com/vagrant)
+* [Cloner le repo Certification Practice Environment](https://github.com/techiescamp/vagrant-kubeadm-kubernetes)
 
 ```bash
 git clone git@github.com:techiescamp/vagrant-kubeadm-kubernetes.git
 ```
 
-Nb : Comment marqué dans le repo, il y a une modification à faire sur Mac/Linux
+Important ! Comme indiqué dans le repo, il y a une modification à faire sur Mac/Linux
 
 ```bash
 mkdir -p /etc/vbox/
@@ -43,6 +44,7 @@ vagrant up
 ```
 
 Les machines se préparent pendant quelques minutes... :) 
+
 
 Connectez-vous au noeud master: 
 
@@ -73,7 +75,7 @@ Lister les pods de tous les namespaces avec l'option wide pour plus d'infos)
 k get po -A -o wide
 ```
 
-### Minikube
+### Option 2: Minikube
 
 [Minikube installation](https://minikube.sigs.k8s.io/docs/start/) 
 

@@ -1,11 +1,13 @@
 # Containers
 
-* image
-* volume 
-* réseau
+## Objectif
+
+* Pourquoi utiliser un container ? 
+* Différences entre VM et containeurs 
+* Rappel sur les notions d'image, volume et réseau
 
 
-# Définition container
+## Définition container
 
 TODO : schéma différences avec Systeme / VM / process
 
@@ -59,6 +61,8 @@ Container Storage Interface (CSI)
 
 ### Image layer
 
+Exemple de Dockerfile d'une application Node
+
 ```Dockerfile
 # The build image
 FROM node:lts-alpine AS build
@@ -97,15 +101,23 @@ docker logs mine/node
 
 TODO :  plus de commandes ? (ports, attach, detach, etc)
 
-Exercices :
 
-* lancer une image A et une image B
-* se connecter en mode interactif
+## Exercices :
+
+* lancer deux containers A et B
+* se connecter en mode interactif 
 * ping A, ping B, ping A from B
 
 
-Bonus :
-* parcourir les layers avec [l'outil dive](https://github.com/wagoodman/dive)
+### Pour aller plus loin
+
+
+#### Explorer les layers 
+
+Il est parfois utile pour des raisons d'optimisation ou débuggage le contenu des layers de l'image
+[L'outil dive](https://github.com/wagoodman/dive) permet de  de parcourir les layers
+
+Utilisation de Dive avec son image Docker 
 
 ```bash
 docker run --rm -it \
@@ -113,7 +125,7 @@ docker run --rm -it \
     wagoodman/dive:latest  <image>
 ```
 
-* sauvegarder une image en .tar 
+#### sauvegarder une image en .tar 
 
 ```bash
 docker save -o myimage.tar mine/node
@@ -156,7 +168,7 @@ Modification de la page par défaut "nginx" avec un volume
 docker run -d -it --name mynginx -v "$(pwd)"/nginx:/usr/share/nginx/html:ro  nginx:alpine
 ```
 
-## Tips
+## Commandes utiles
 
 Se connecter à un container en cours d'execution 
 
@@ -188,4 +200,4 @@ docker run -it -v /var/log/:/youpi busybox
 * un process par container
 * limiter les ressources du container
 * communication réseau
-* partager des données via des volumes
+* partage des données possible via les volumes

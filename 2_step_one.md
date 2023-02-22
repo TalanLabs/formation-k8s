@@ -1,4 +1,9 @@
-# Commandes basiques
+# Configuration et outils
+
+## Objectif
+
+* connaitre les commandes utiles avec kubectl
+* manipuler les namespaces
 
 
 ## Kubectl
@@ -9,27 +14,44 @@ Création d'un alias pour simplifier l'écriture des commandes
 alias k=kubetcl
 ```
 
-Et ne pas oublier 
+Aide de kubectl  
 
 ```bash
-# aide de kubectl  
 k --help
+```
 
-# aide sur la ressource Pod
+Aide sur la ressource Pod
+
+```bash
 k explain pods
+```
 
-# aide sur l'exectution de la commande run d'un pod
+Aide sur l'exectution de la commande `run`  d'un pod
+
+```bash
 k run pod --help
-``` 
+```
 
-Pour lister tous les types de ressources et leur alias :
+Pour lister tous les types de ressources et leur alias 
 
 ```bash
 kubectl api-resources
 ```
 
+Kubectl utilise un fichier `~/.kube/config`  pour stocker les informations du cluster 
+
+* Serveurs (IP, CA Cert, Nom)
+* Users (Nom, Certificat, Clé)
+* Context, association d'un user et d'un Serveurs
+
+```bash
+cat ~/.kube/config
+```
+
 
 ## Infos du cluster
+
+
 
 Afficher les infos du cluster
 
@@ -141,9 +163,12 @@ k config view -o jsonpath='{.contexts[].context.namespace}'
 ```
 
 
-## création d'un pod
+## Bonnes pratiques 
 
-nb: on évite la création impérative. les fichiers permettent de reproduire, modifier , partager et versionner facilement nos configurations
+nb: on évite la création de resources en CLI. 
+les fichiers permettent de reproduire, modifier , partager et versionner facilement nos configurations
+
+K8 permet de générer des configurations à partir d'une commande CLI avec `--dry-run=client` 
 
 ```bash
 k run mypod --image=busybox --dry-run=client -o yaml > pod.yaml
@@ -168,7 +193,7 @@ status: {}
 
 ```
 
-exécution
+Exécution de la configuration
 
 ```bash
 k apply -f pod.yaml
@@ -196,7 +221,7 @@ error !
 mypod   0/1     crashloopbackoff   5 (60s ago)   4m14s   172.16.158.2   worker-node02   <none>           <none>
 ```
 
-les containeurs n'ont pas de terminale (tty) attaché par défaut, il faut le rajouter (dans notre cas)
+les containeurs n'ont pas de terminal (tty) attaché par défaut, il faut le rajouter (dans notre cas)
 
 
 ajoutons l'option  `tty` dans `pod.yaml`  
@@ -223,5 +248,5 @@ kubectl exec -it mypod -- /bin/sh
 ```
 
 
+## Exercices 
 
-todo : request limit ?
