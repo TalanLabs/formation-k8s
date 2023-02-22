@@ -1,4 +1,4 @@
-# Configuration et outils
+# Connaitre et manipuler son cluster
 
 ## Objectif
 
@@ -248,5 +248,4 @@ kubectl exec -it mypod -- /bin/sh
 ```
 
 
-## Exercices 
 
