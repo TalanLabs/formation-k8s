@@ -74,3 +74,70 @@ cd /data2
 cat whatever.txt
 ```
 
+
+## Partager un secret via un volume
+
+
+Création d'un certification TLS
+
+```bash
+openssl genrsa -out ssl.key 2048
+openssl req -new -x509 -key ssl.key -out ssl.cert -days 360 -subj /CN=secret-server.example.com
+```
+
+Générer un secret avec ces deux fichiers 
+
+```bash
+k create secret generic ssl-key-cert --from-file=ssl.key --from-file ssl.cert
+```
+
+Informations 
+
+```bash
+k describe secret ssl-key-cert
+
+Name:         ssl-key-cert
+Namespace:    learnk8
+Labels:       <none>
+Annotations:  <none>
+
+Type:  Opaque
+
+Data
+====
+ssl.cert:  1155 bytes
+ssl.key:   1704 bytes
+
+```
+
+
+Utiliser les secets en tant que fichiers montés sur le container 
+
+
+```bash
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+    - image: nginx:alpine
+      name: web-server
+      volumeMounts:
+      - name: certs
+        mountPath: /etc/nginx/certs/
+        readOnly: true
+  volumes:
+      - name: certs
+        secret:
+          secretName: ssl-key-cert
+```
+
+Verification 
+
+```bash
+kubectl exec -it nginx-pod  -- /bin/sh
+
+ls /etc/nginx/certs/
+ssl.cert  ssl.key
+```
