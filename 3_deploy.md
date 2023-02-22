@@ -317,8 +317,6 @@ spec:
           port: 8080
         initialdelayseconds: 15
         periodseconds: 20
-
-
 ```
 
 ## Limitation des ressources

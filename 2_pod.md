@@ -1,4 +1,4 @@
-# Connaitre et manipuler son cluster
+# Configuration et outils
 
 ## Objectif
 

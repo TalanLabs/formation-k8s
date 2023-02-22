@@ -10,13 +10,16 @@ Work In progress
 * [Rappel des bases des containers](./0_container.md)
 * [K8](./0_k8.md)
 * [Installation du cluster local](./1_setup_local_k8.md)
-* [Outils manipuler son cluster](./2_step_one.md)
-* [Déploiement d'un pod](./3_step_two.md)
-* [Service discovery](./4_step_three.md)
-* [Configmap et secrets](./5_step_four.md)
-* [Les Volumes](./6_step_five.md)
-WIP : securité
+* [Outils manipuler son cluster](./2_pod.md)
+* [Déploiement d'un pod](./3_deploy.md)
+* [Service discovery](./4_service.md)
+* [Configmap et secrets](./5_config.md)
+* [Volumes](./6_volumes.md)
+* [Ingress controller](./7_ingress.md)
+* [Helm / Kustomize](./8_tools.md)
 
 ## CKAD exam
 
 [CKAD exam](./ckad.md)
+
+
