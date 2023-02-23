@@ -1,5 +1,7 @@
 # Formation K8 pour développeurs
 
+![Logo k8](./medias/Kubernetes_Logo.png)
+
 ## Statut 
 
 Work In progress 
