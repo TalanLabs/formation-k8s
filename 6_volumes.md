@@ -141,3 +141,13 @@ kubectl exec -it nginx-pod  -- /bin/sh
 ls /etc/nginx/certs/
 ssl.cert  ssl.key
 ```
+
+
+
+## Exercices 
+
+
+
+## A retenir 
+
+

@@ -369,10 +369,9 @@ spec:
 * redéployer une nouvelle version de l'image
 
 
-## Récapitulatif
+## A retenir
 
 Nous avons bien des pods déployés avec l'image nginx
 
 En revanche, à chaque déploiement, l'ip de nos containers va changer...
 
-Nous allons mettre en place à notion de [service](./step_three.md)

@@ -207,3 +207,5 @@ API_KEY=123–456
 * déployer une base de données (Postgres ou redis) et utiliser les configmap et secrets
 * déployer une application node qui se connecte à la base de données crée 
 
+
+## A retenir

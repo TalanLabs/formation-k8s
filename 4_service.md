@@ -155,3 +155,8 @@ Mappe le service au contenu du champ externalName (par exemple foo.bar.example.c
 * déployer une application B en Node qui appelle la 1ère application
 
 
+## A retenir
+
+
+
+
