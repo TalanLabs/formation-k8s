@@ -71,6 +71,19 @@ current-context: kubernetes-admin@kubernetes
 ```
 
 
+Check cluster infos / IP :codeblock
+
+
+```bash
+k cluster-info
+
+
+Kubernetes control plane is running at https://10.0.0.10:6443
+CoreDNS is running at https://10.0.0.10:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
 ## Namespace
 
 Lister les namespaces
