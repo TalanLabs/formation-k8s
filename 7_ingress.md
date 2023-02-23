@@ -200,6 +200,20 @@ BODY:
 > nb: option `-k` signifie insecure 
 
 
+Retrouver les Endpoints
+
+```bash
+k get endpoints -A
+
+NAMESPACE            NAME              ENDPOINTS                                                        AGE
+default              kubernetes        10.0.0.10:6443                                                   7d5h
+ingress-controller   haproxy-ingress   10.0.0.12:80,10.0.0.12:443                                       79m
+kube-system          kube-dns          172.16.77.139:53,172.16.77.140:53,172.16.77.139:53 + 3 more...   7d5h
+kube-system          metrics-server    10.0.0.11:4443                                                   7d5h
+learnk8              echoserver        172.16.158.27:8080,172.16.87.215:8080,172.16.87.216:8080         70m
+
+```
+
 Curl depuis la machine host le domaine `echoserver.local`
 
 Nb: vous devez l'endpoint dans votre fichier `/etc/hosts` 
