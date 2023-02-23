@@ -7,7 +7,7 @@
 
 ## Service
 
-TODO : schema
+![Service](./medias/module_04_service.svg)
 
 La notion de service est une couche d'astraction qui permet d'exposer une application qui tourne sur plusieurs noeuds
 

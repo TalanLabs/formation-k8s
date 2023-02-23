@@ -7,7 +7,7 @@
 
 ## Pod vs Déploiement
 
-TODO: schema
+![Deploy](./medias/module_05_scaling1.svg)
 
 Le déploiement est à un niveau d'abstraction supérieur au pod
 Il permet de gérer le cycle de vie des application en définissant les images, nombre de pods et d'autes paramètres

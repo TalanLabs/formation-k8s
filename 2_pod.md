@@ -4,6 +4,8 @@
 
 * creation et manipulation des images via des pods
 
+![Pod](./medias/module_03_pods.svg)
+
 
 ## Création d'une ressource Pod
 

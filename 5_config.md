@@ -209,3 +209,6 @@ API_KEY=123–456
 
 
 ## A retenir
+
+* les configmap et secret sont essentiels pour faire tourner un code immuable dans x environnements
+* attention, un secret n'est pas secret si on peut le décoder... 
