@@ -2,7 +2,6 @@
 
 ## Objectif 
 
-
 ## Ingress et Ingress Controller
 
 Ingress (ou une entrée réseau), expose les routes HTTP et HTTPS de l'extérieur du cluster à des services au sein du cluster. 
@@ -24,18 +23,20 @@ Un contrôleur d'Ingress est responsable de l'exécution de l'Ingress, général
 Attention : 
 
 un cluster déployé dans une VM comme vagrant ne peut pas fournir un service de type `Loadbalancer` 
-On utilesera un service de type `Nodeport`  
+On utilisera un service de type `Nodeport`  
 
 
 ## Helm
 
 [HELM](https://helm.sh/) est un gestionnaire de paquet pour K8. 
-Un package s'appelle un `chart` 
+Un package s'appelle un `chart` et peut dépendre d'autres `chart` 
 
 Helm utilise un système de modèles basé sur le modèle Go pour rendre les manifestes Kubernetes à partir de charts.
 Un chart est une structure cohérente séparant les modèles et les valeurs.
 
 Vous pouvez trouver des charts sur [https://artifacthub.io](https://artifacthub.io/) 
+
+Pour continuer l'atelier, on utilisera un Helm chart pour simplifier l'installation d'un Ingress Controller
 
 [Suivre la procédure d'innstallation d'Helm](https://helm.sh/docs/intro/install/)
 
@@ -44,9 +45,9 @@ Vous pouvez trouver des charts sur [https://artifacthub.io](https://artifacthub.
 
 On va utiliser Helm pour installer notre ingress controller
 
-[Github HAProxy Ingress](https://github.com/haproxy-ingress/charts/tree/master/haproxy-ingress)
+[HAProxy Ingress](https://github.com/haproxy-ingress/charts/tree/master/haproxy-ingress)
 
-HAProxy override config ` haproxy-ingress-values.yaml` 
+Comment nous devons changer le type de service utilisé par HAProxy, nous allons surcharger la config ` haproxy-ingress-values.yaml` 
 
 ```yaml
 controller:
@@ -55,11 +56,12 @@ controller:
       type: NodePort
 
 ```
+Déploiement de l'ingress controller
 
 ```bash
 helm install haproxy-ingress haproxy-ingress/haproxy-ingress  --create-namespace --namespace ingress-controller   -f haproxy-ingress-values.yaml
 ```
-
+> Nb: L'ingress controller est déployé dans un namespace différent mais peut intéragir sur tous les namepaces
 
 ### Deploy and expose
 
@@ -101,8 +103,41 @@ Events:            <none>
 Création de la règle Ingress 
 
 ```bash
-k create ingress echoserver  --annotation kubernetes.io/ingress.class=haproxy  --rule="echoserver.local/*=echoserver:8080,tls"
+k create ingress echoserver  --annotation kubernetes.io/ingress.class=haproxy  --rule="echoserver.local/*=echoserver:8080,tls" --dry-run=client -o yaml > ingress.yaml
 ```
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+  creationTimestamp: null
+  name: echoserver
+spec:
+  rules:
+  - host: echoserver.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: echoserver
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - echoserver.local
+status:
+  loadBalancer: {}
+
+```
+
+
+```bash
+k apply -f ingress.yaml
+``` 
 
 Vérification de l'ingress
 
