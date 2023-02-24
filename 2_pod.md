@@ -2,7 +2,7 @@
 
 ## Objectif
 
-* creation et manipulation des images via des pods
+* création et manipulation des images via des pods
 * comprendre la notion de request/limit 
 * comprendre la notion de readiness et liveness
 
@@ -19,17 +19,19 @@ k run mypod --image=busybox
 ```
 
 
-> nb: on évite la création de resources directement via les arguments..
-> les fichiers permettent de reproduire, modifier , partager et versionner facilement nos configurations
+> nb: on évite la création de resources directement via les arguments de `kubectl`  
+> les fichiers `yaml`  permettent de reproduire, modifier , partager et versionner facilement nos configurations
 
 
 K8 permet de générer des configurations à partir d'une commande CLI avec `--dry-run=client` 
 
 ```bash
 k run mypod --image=busybox --dry-run=client -o yaml > pod.yaml
+```
 
 cat pod.yaml
- 
+
+```yaml
 apiversion: v1
 kind: pod
 metadata:
@@ -57,50 +59,21 @@ pod/mypod created
 
 ```
 
-vérifions les pods créés
+Vérifions les pods créés
 
 ```bash
 k get pods -o wide
 ```
 
 
-execution d'une commande dans le pod
-
-```bash
-kubectl exec -it mypod -- /bin/bash
-```
-
-error !
-
-```bash
-mypod   0/1     crashloopbackoff   5 (60s ago)   4m14s   172.16.158.2   worker-node02   <none>           <none>
-```
-
-les containeurs n'ont pas de terminal (tty) attaché par défaut, il faut le rajouter (dans notre cas)
-
-
-ajoutons l'option  `tty` dans `pod.yaml`  
-
-```bash
-  containers:
-  - image: busybox
-    name: mypod
-    resources: {}
-    tty: true
-  dnspolicy: clusterfirst
-```
-
-appliquons les changements
-
-```bash
-k apply -f pod.yaml
-```
-
-execution du shell dans le container
+Execution d'une commande dans le pod
 
 ```bash
 kubectl exec -it mypod -- /bin/sh
 ```
+
+> nb: le shell doit être disponible dans l'image choisie
+
 
 ## Liveness / readiness
 
@@ -220,5 +193,6 @@ mynginx-8689b4976-j6ssb   0m           1Mi
 ## A retenir 
 
 * Créer un pod n'est pas très différent de la commande Docker ou Podman
+* Définir des chemins HTTP pour déterminer sur le pod est viable est indispensable
 * A ce stade, l'intérêt de K8 est plus que discutable 
 

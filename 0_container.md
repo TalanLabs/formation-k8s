@@ -259,7 +259,7 @@ docker run -it -v /var/log/:/youpi busybox
 
 * docker est un runtime, il en existe d'autres (ex: podman)
 * les images sont des emplilements de fichiers compressés
-* un process par container
+* privilégier un process par container
 * limiter les ressources du container
 * communication réseau
 * partage des données possible via les volumes
