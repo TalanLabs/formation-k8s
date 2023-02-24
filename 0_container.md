@@ -31,7 +31,7 @@ Kernel Linux:
 ## Open Container Initiative
 
 
-Container Runtime Interface (CRI)
+### Container Runtime Interface (CRI)
 
 Container Runtime: 
 * containerd (la référence)
@@ -42,12 +42,12 @@ Container Runtime:
 [Plus d'infos sur l'OCI Runtime tools](https://github.com/opencontainers/runtime-tools)
 
 
-Container Network Interface (CNI)
+### Container Network Interface (CNI)
 
 [Plus d'infos sur la CNI](https://github.com/containernetworking/cni)
 
 
-Container Storage Interface (CSI)
+### Container Storage Interface (CSI)
 
 [Plus d'infos sur la CSI](https://github.com/container-storage-interface/spec/blob/master/spec.md)
 
@@ -80,6 +80,8 @@ COPY --chown=node:node --from=build /app /app
 CMD ["node", "index.js"]
 ```
 
+> Note: le multistage permet d'optimiser l'image finale en gardant que les artefacts souhaités
+
 Build de l'image dans le registre local
 
 ```bash
@@ -98,8 +100,6 @@ Lire les logs
 docker logs mine/node
 ```
 
-
-TODO :  plus de commandes ? (ports, attach, detach, etc)
 
 
 ## Exercices :
@@ -133,14 +133,75 @@ docker save -o myimage.tar mine/node
 
 ## Network
 
-TODO : schema  bridge / network 
+Il exite plusieurs types de réseau 
+* bridge
+* host
+* overlay
+* ipvlan
+* macvlan
+* none
 
+
+
+[Plus d'infos sur les réseaux](https://docs.docker.com/network/) 
+
+
+Lister les réseaux 
+
+```bash
+docker network ls
+
+NETWORK ID     NAME            DRIVER    SCOPE
+41acc3619b24   bridge          bridge    local
+406384df45cf   host            host      local
+d0bbee684cb8   none            null      local
+
+```
 
 Création d'un réseau de type bridge avec un subnet donné
 
-```language
+```bash
 docker network create --driver=bridge --subnet=192.168.0.0/24 mybridge
 ```
+
+Vérification de notre réseau bridge
+
+```bash
+docker network inspect mybridge
+
+[
+    {
+        "Name": "mybridge",
+        "Id": "43f39ce8b1fbf25a7ca305c76cb97eb2d0fae69c982617e2e721cb919eec4a90",
+        "Created": "2023-02-15T16:47:40.019087234+01:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "192.168.0.0/24",
+                    "Gateway": "192.168.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+
+```     
+
 
 Container in this network
 
@@ -154,7 +215,7 @@ Des containers dans deux réseaux séparés ne peuvent communiquer
 Exercices : 
 
 * créer un autre réseau de type bridge
-* lancer un container deux containers sur deux réseaux différents 
+* lancer deux containers sur deux réseaux différents 
 * ping chaque container depuis la machine host
 * ping le container A depuis le container B
 
@@ -196,6 +257,7 @@ docker run -it -v /var/log/:/youpi busybox
 
 ## A retenir 
 
+* docker est un runtime, il en existe d'autres (ex: podman)
 * les images sont des emplilements de fichiers compressés
 * un process par container
 * limiter les ressources du container
