@@ -7,7 +7,15 @@ Création d'un cluster K8 local pour manipuler des ressources
 
 ### Option 1 : Vagrant (recommandé) 
 
-TODO : schema nodes dans vagrant 
+```bash
+       
+                   Machine HOST
+                        |
+                   [Virtual Box]
+        --|-------------|-----------------|--
+   [ Node master ] [ Node worer 1] [ Node worker 2]
+
+```
 
 A défaut d'avoir des machines physiques, Vagrant nous permet de créer des VM pour chaque noeud de notre cluster 
 
@@ -43,7 +51,7 @@ nodes:
 vagrant up
 ```
 
-Les machines se préparent pendant quelques minutes... :) 
+> Nb: Les machines se préparent pendant quelques minutes. Patientez... 
 
 
 Connectez-vous au noeud master: 
@@ -75,6 +83,9 @@ Lister les pods de tous les namespaces avec l'option wide pour plus d'infos)
 k get po -A -o wide
 ```
 
+Vous êtes prêt pour pratiquer
+
+
 ### Option 2: Minikube
 
 [Minikube installation](https://minikube.sigs.k8s.io/docs/start/) 
@@ -97,4 +108,5 @@ Bonus : K8 dashboard
 minikube dashboard
 ```
 
+Vous êtes prêt pour pratiquer
 
