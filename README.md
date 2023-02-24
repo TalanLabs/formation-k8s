@@ -7,7 +7,6 @@
 Work In progress 
 
 
-
 ## Objectif 
 
 Comprendre et manipuler les composants principaux d'un cluster Kubernetes en déployant des applications
@@ -17,7 +16,7 @@ Durée : 2 jours
 ## Etapes 
 
 * [Rappel des bases des containers](./0_container.md)
-* [K8](./0_k8.md)
+* [K8 core contep](./0_k8.md)
 * [Installation du cluster local](./0_setup_local_k8.md)
 * [Configuration et outils d'un cluster](./1_cluster.md)
 * [Exécuter des container dans des pods](./2_pod.md)
@@ -26,7 +25,7 @@ Durée : 2 jours
 * [Configmap et secrets](./5_config.md)
 * [Volumes](./6_volumes.md)
 * [Ingress controller](./7_ingress.md)
-* [Helm / Kustomize](./8_tools.md)
+* [Kustomize / Kubectx](./8_tools.md)
 
 ## CKAD exam
 
