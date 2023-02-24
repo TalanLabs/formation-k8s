@@ -15,12 +15,13 @@ Les pods peuvent être créés et détruits par les déploiements, mais pour la 
 
 ## Exposer nos pods Nginx 
 
-Création d'un service qui expose le port  `80` pour notre application `myngninx`
+Création d'un service qui expose le port  `8000` pour notre application `myngninx`
 
 ```bash
-k expose deploy mynginx --port 80 --dry-run=client -o yaml > service.yaml
+k expose deploy mynginx --port 8000 --dry-run=client -o yaml > service.yaml
 ```
 
+On peut cibler un port de container différent, ici `80` 
 ```yaml
 apiVersion: v1
 kind: Service
@@ -31,7 +32,7 @@ metadata:
   name: mynginx
 spec:
   ports:
-  - port: 80
+  - port: 8000
     protocol: TCP
     targetPort: 80
   selector:
@@ -55,7 +56,7 @@ k get svc
 
 NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   172.17.0.1      <none>        443/TCP   4d
-mynginx      ClusterIP   172.17.24.238   <none>        80/TCP    3s
+mynginx      ClusterIP   172.17.24.230   <none>        8000/TCP    3s
 ```
 
 Pour en savoir plus sur les propriétés créés pour notre service 
@@ -73,7 +74,7 @@ IP Family Policy:  SingleStack
 IP Families:       IPv4
 IP:                172.17.24.238
 IPs:               172.17.24.238
-Port:              <unset>  80/TCP
+Port:              <unset>  8000/TCP
 TargetPort:        80/TCP
 Endpoints:         172.16.158.11:80,172.16.87.200:80,172.16.87.201:80
 Session Affinity:  None
@@ -86,7 +87,7 @@ A noter que le type de service est `Type : Cluster IP`
 Testons notre service nginx sur cette ip (toujour depuis le cluster dans vagrant)
 
 ```bash
-curl 172.17.24.238
+curl 172.17.24.238:8000
 
 <!DOCTYPE html>
 <html>
@@ -150,13 +151,13 @@ Mappe le service au contenu du champ externalName (par exemple foo.bar.example.c
 
 ## Exercices 
 
-
 * exposer l'application pour qu'elle soit accessible depuis la machine host
 * déployer une application B en Node qui appelle la 1ère application
-
+* déployer un service qui ne cible que des application avec une version spécifique d'image 
 
 ## A retenir
 
-
+* le service permet de gérer indifféremment 1 ou x pods
+* le service permet de controler/segmenter l'accès à des applications
 
 

@@ -13,7 +13,7 @@ Création d'un cluster K8 local pour manipuler des ressources
                         |
                    [Virtual Box]
         --|-------------|-----------------|--
-   [ Node master ] [ Node worer 1] [ Node worker 2]
+   [ Node master ] [ Node worker 1] [ Node worker 2]
 
 ```
 
