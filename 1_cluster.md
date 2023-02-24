@@ -12,6 +12,9 @@ Création d'un alias pour simplifier l'écriture des commandes
 alias k=kubetcl
 ```
 
+> nb: pas requis, mais fait gagner du temps sur des commandes parfois longues..
+
+
 Aide de kubectl  
 
 ```bash
@@ -71,7 +74,7 @@ current-context: kubernetes-admin@kubernetes
 ```
 
 
-Check cluster infos / IP :codeblock
+Check cluster infos / IP 
 
 
 ```bash
@@ -92,13 +95,21 @@ Lister les namespaces
 k get ns  
 ```
 
-Création d'un nouveau namespace de façon impérative
+
+
+Création d'un nouveau namespace `learnk8` en ligne de commande
 
 ```bash
 k create ns learnk8
 ```
 
-Création d'un nouveau namespace via fichier de spécification Yaml
+Supprimer un Namespace
+
+```bash
+k delete ns learnk8
+```
+
+Recommandé : création d'un nouveau namespace via fichier de spécification Yaml
 
 ```bash
  k create ns learnk8 --dry-run=client -o yaml > namespace.yaml
@@ -141,7 +152,7 @@ No LimitRange resource.
 ```
 
 
-Utilisation du context
+Utilisation du context pour basculer vers le namespace `learnk8` par défaut 
 
 ```bash
 k config set-context --current --namespace=learnk8
@@ -167,7 +178,7 @@ current-context: kubernetes-admin@kubernetes
 kind: Config
 ```
 
-Tips, possible de cibler le champ avec le format `jsonpath`
+Tips: possible de cibler le champ avec le format `jsonpath`
 
 ```bash
 k config view -o jsonpath='{.contexts[].context.namespace}'
