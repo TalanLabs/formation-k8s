@@ -87,4 +87,35 @@ kubectl apply -k kustomize
 [Documentation Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
 
 
+## Kubectx
+
+Un outil pour switcher facilement entre les clusters et namespaces 
+
+[Kubectx](https://github.com/ahmetb/kubectx)
+
+
+```bash
+# switch to another cluster that's in kubeconfig
+$ kubectx minikube
+Switched to context "minikube".
+
+# switch back to previous cluster
+$ kubectx -
+Switched to context "oregon".
+
+# create an alias for the context
+$ kubectx dublin=gke_ahmetb_europe-west1-b_dublin
+Context "dublin" set.
+Aliased "gke_ahmetb_europe-west1-b_dublin" as "dublin".
+
+# change the active namespace on kubectl
+$ kubens kube-system
+Context "test" set.
+Active namespace is "kube-system".
+
+# go back to the previous namespace
+$ kubens -
+Context "test" set.
+Active namespace is "default".
+```
 
