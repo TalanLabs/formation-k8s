@@ -2,13 +2,13 @@
 
 ## Objectif 
 
-* comprendre la différence en un configmap et un secret
+* comprendre la différence entre un configmap et un secret
 * manipuler et utiliser les configmap et secrets
 
 
 ## Configmap et Secret
 
-TODO
+![Configmap et secret](./medias/configmap_secret.png)
 
 ## Configmap 
 
