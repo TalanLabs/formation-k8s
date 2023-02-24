@@ -15,6 +15,7 @@ Il permet de gérer le cycle de vie des application en définissant les images, 
 ## Déploiement 
 
 Génération d'une configuration pour un déploiement nommé `mynginx` avec une image `nginx` 
+
 ```bash
 k create deployment --image=nginx mynginx --dry-run=client -o yaml > deployment.yaml
 ```
@@ -114,10 +115,19 @@ Events:
 
 A noter la propriété `StrategyType: RollingUpdate` 
 
+Il existe d'autre types de stratégie intéressantes pour déployer une nouvelle version de votre application
+([documentation déploiement K8](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/))
+
+Quelques techniques couramment utilisés: 
+
+* blue/green: la nouvelle version (green) est déployée en même temps que l'actuelle (blue). Un fois déployée, on met à jour le service pour rediriger vers ces versions
+* canary : variante de blue/green où l'on redirige progressivement une partie du trafic vers la nouvelle version
+* Recreate : Tous les pods sont tués et remplacés par la nouvelle version en même temps...
+
 
 ## Modifier le replicaset
 
-Le déploiement repose sur de `replicaset`
+Le déploiement repose sur de `replicaset` qui gère le nombre de pods à maintenir
 
 ```bash
 k get replicaset
@@ -127,7 +137,7 @@ mynginx-56766fcf49   1         1         1       8m14s
 ```
 
 
-Si l'ont souhaite augment le nombre de pods
+Si l'ont souhaite augmenter le nombre de pods
 
 ```yaml
 # other code
@@ -185,6 +195,8 @@ Changeons la version de l'image nginx utilisée
 k apply -f deployment.yaml 
 ```
 
+Vérifions le nombre de pods
+
 ```bash
 k get pods
 
@@ -194,6 +206,8 @@ mynginx-56766fcf49-kcszt   1/1     Running             0          24m
 mynginx-6d9c57cffd-nwbbj   0/1     ContainerCreating   0          1s
 mynginx-6d9c57cffd-t9ds2   1/1     Running             0          11s
 ```
+
+Vérifions l'état du déploiement
 
 ```bash
 k rollout status deployment/mynginx
@@ -243,6 +257,8 @@ mynginx-56766fcf49   0         0         0       44m   nginx        nginx       
 mynginx-6d9c57cffd   3         3         3       19m   nginx        nginx:1.19   app=mynginx,pod-template-hash=6d9c57cffd
 ```
 
+Lister les pods avec les libellés
+
 ```bash
 k get pods --show-labels
 
@@ -252,7 +268,9 @@ mynginx-6d9c57cffd-7mmwf   1/1     Running   0          3m23s   app=mynginx,pod-
 mynginx-6d9c57cffd-df8q2   1/1     Running   0          3m26s   app=mynginx,pod-template-hash=6d9c57cffd
 ```
 
-Filter les logs par labels
+> nb: une bonne pratique consiste à indiquer la version dans les libellés  `version: 1.12` afin de mieux cibler les pods ou deploy
+
+Filter les logs par libellés
 
 ```bash
 k logs -l app=myngninx
@@ -275,7 +293,8 @@ k logs -f -l app=mynginx
 
 ## A retenir
 
-Nous avons bien des pods déployés avec l'image nginx
+* Nous avons bien des pods déployés avec l'image nginx
+* la mise à l'échelle est simple et automatique
 
 En revanche, à chaque déploiement, l'ip de nos containers va changer...
 
