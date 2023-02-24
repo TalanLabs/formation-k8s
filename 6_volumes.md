@@ -10,9 +10,11 @@
 
 ## Les différents types de volume 
 
-TODO 
 
 * volume ephémère vs persistant
+* nombreux storage provider disponbibles
+
+[Documentation sur les volumes K8](https://kubernetes.io/fr/docs/concepts/storage/volumes/) 
 
 
 ## Volume
@@ -146,8 +148,14 @@ ssl.cert  ssl.key
 
 ## Exercices 
 
-
+* configurer la page d'accueil d'Nginx en montant un volume 
+* partager des données entre plusieurs pods
 
 ## A retenir 
+
+* chaque pod est monté avec un volume éphémère, détruit avec le pod
+* le volume permet de persister des données et des les partager
+* il est courant de monter des configmap / secrets dans les containers
+* il existent de multitudes d'abstraction de filesystem (ex Aws S3, Azure Blog, etc)
 
 
