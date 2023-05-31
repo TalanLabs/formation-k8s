@@ -18,7 +18,7 @@ remote_state {
   backend = "s3"
   config = {
     encrypt        = true
-    bucket         = "talan-formation-eks"
+    bucket         = "talan-formation-k8s"
     key            = "terraform-state/mwf/${path_relative_to_include()}/terraform.tfstate"
     region         = local.region
   }
