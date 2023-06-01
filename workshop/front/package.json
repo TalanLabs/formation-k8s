@@ -1,0 +1,29 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^3.2.0",
+    "serve": "^14.2.0",
+    "axios": "^1.4.0"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "start": "react-scripts start",
+    "serve": "serve -s build"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
