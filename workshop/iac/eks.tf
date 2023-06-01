@@ -1,5 +1,5 @@
 locals {
-  name            = "formation-eks"
+  name            = "formation-k8s"
   cluster_version = "1.26"
   region          = var.region
 }
