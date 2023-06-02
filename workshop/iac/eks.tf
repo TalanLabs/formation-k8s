@@ -4,6 +4,10 @@ locals {
   region          = var.region
 }
 
+data "aws_iam_users" "formatters" {
+  name_regex = ".*\\.(azam|nau)"
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
 
@@ -33,6 +37,8 @@ module "eks" {
     }
   }
 
+  kms_key_administrators = data.aws_iam_users.formatters.arns
+
   tags = {
     Project    = local.name
   }
@@ -43,17 +49,11 @@ module "eks" {
 ################################################################################
 
 data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_name
-  depends_on = [
-    module.eks.cluster_id
-  ]
+  name = local.name
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_name
-  depends_on = [
-    module.eks.cluster_id
-  ]
+  name = local.name
 }
 
 provider "kubernetes" {
