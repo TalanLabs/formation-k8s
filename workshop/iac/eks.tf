@@ -20,6 +20,12 @@ module "eks" {
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
 
+
+    # aws-auth configmap
+  manage_aws_auth_configmap = true
+  aws_auth_users = [for id, arn in tolist(data.aws_iam_users.formatters.arns): { userarn = arn, username = tolist(data.aws_iam_users.formatters.names)[id] , groups   = ["system:masters"]}]
+  
+
   # Managed Node Groups
   eks_managed_node_group_defaults = {
     ami_type  = "AL2_x86_64"
