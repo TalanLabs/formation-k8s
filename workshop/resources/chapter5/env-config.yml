@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config
+  namespace: formation
+data:
+  FLAG: FLAG_FROM_CONFIG

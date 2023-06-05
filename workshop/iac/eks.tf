@@ -25,10 +25,10 @@ module "eks" {
     # aws-auth configmap
   manage_aws_auth_configmap = true
   aws_auth_users = concat(
-    [for trainer in tolist(data.aws_iam_user.trainers): { userarn = trainer.arn, username = trainer.user_name , groups   = ["system:masters"]}], 
+    [for trainer in tolist(data.aws_iam_user.trainers): { userarn = trainer.arn, username = trainer.user_name , groups   = ["system:masters"]}],
     [for participant in tolist(aws_iam_user.participant): { userarn = participant.arn, username = participant.name , groups   = []}]
   )
-  
+
 
   # Managed Node Groups
   eks_managed_node_group_defaults = {

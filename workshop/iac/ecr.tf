@@ -4,6 +4,7 @@ module "ecr" {
   for_each = toset(["back", "front"])
   source = "terraform-aws-modules/ecr/aws"
 
+  repository_force_delete = true
   repository_name = "${local.name}-${each.key}"
 
   repository_lifecycle_policy = jsonencode({
