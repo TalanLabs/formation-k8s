@@ -4,8 +4,9 @@ locals {
   region          = var.region
 }
 
-data "aws_iam_users" "formatters" {
-  name_regex = ".*\\.(azam|nau)"
+data "aws_iam_user" "trainers" {
+  count = length(var.trainers)
+  user_name = var.trainers[count.index]
 }
 
 module "eks" {
@@ -23,7 +24,10 @@ module "eks" {
 
     # aws-auth configmap
   manage_aws_auth_configmap = true
-  aws_auth_users = [for id, arn in tolist(data.aws_iam_users.formatters.arns): { userarn = arn, username = tolist(data.aws_iam_users.formatters.names)[id] , groups   = ["system:masters"]}]
+  aws_auth_users = concat(
+    [for trainer in tolist(data.aws_iam_user.trainers): { userarn = trainer.arn, username = trainer.user_name , groups   = ["system:masters"]}], 
+    [for participant in tolist(aws_iam_user.participant): { userarn = participant.arn, username = participant.name , groups   = []}]
+  )
   
 
   # Managed Node Groups
@@ -43,7 +47,7 @@ module "eks" {
     }
   }
 
-  kms_key_administrators = data.aws_iam_users.formatters.arns
+  kms_key_administrators = [for trainer in tolist(data.aws_iam_user.trainers): trainer.arn]
 
   tags = {
     Project    = local.name
@@ -71,6 +75,55 @@ provider "kubernetes" {
 resource "kubernetes_namespace" "formation" {
   metadata {
     name = "formation"
+  }
+}
+
+################################################################################
+# Kubernetes workshop specific resssource
+################################################################################
+
+
+resource "kubernetes_namespace" "participant" {
+  count = length(var.participants)
+  metadata {
+    name = replace(var.participants[count.index], ".", "-")
+  }
+}
+
+resource "kubernetes_role" "participant" {
+  count = length(var.participants)
+  metadata {
+    name =  replace(var.participants[count.index], ".", "-")
+    namespace = replace(var.participants[count.index], ".", "-")
+  }
+  rule {
+    api_groups     = [""]
+    resources      = ["*"]
+    verbs          = ["*"]
+  }
+  rule {
+    api_groups     = [""]
+    resources      = ["*"]
+    verbs          = ["*"]
+  }
+}
+
+
+resource "kubernetes_role_binding" "participant" {
+  count = length(var.participants)
+  metadata {
+    name =  replace(var.participants[count.index], ".", "-")
+    namespace = replace(var.participants[count.index], ".", "-")
+  }
+  subject {
+    kind      = "User"
+    name      = replace(var.participants[count.index], ".", "-")
+    api_group = "rbac.authorization.k8s.io"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = replace(var.participants[count.index], ".", "-")
   }
 }
 

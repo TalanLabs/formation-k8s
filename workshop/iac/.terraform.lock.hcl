@@ -49,6 +49,7 @@ provider "registry.terraform.io/hashicorp/cloudinit" {
 provider "registry.terraform.io/hashicorp/helm" {
   version = "2.10.0"
   hashes = [
+    "h1:vHIu7wBOINZunNj8T9R0/7UoSdwjYf4s+0eZ2cHbFnA=",
     "h1:x7WiY3pvEld8k/1qDXXZPr3qKIAGbP4+V5WzNDbs/Co=",
     "zh:0b8d1e046f6c1866d9e41e613ab1a60d5ba5a5d62b4e20a3255aeb8edeec9968",
     "zh:0f7003af52dd41628bc15559c3d1c1dc64575ea854b7da4a91e2a9a10b03d5f0",
