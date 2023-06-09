@@ -42,7 +42,7 @@ spec:
       initContainers:
         - name: create-dir
           image: busybox
-          command: ["sh", "-c", "mkdir -p /app/bdd/ && cd /app/bdd && touch a b c"]
+          command: ["sh", "-c", "mkdir -p /app/bdd/ && echo {\\\"flag\\\": \\\"SECRET_123\\\"} > /app/bdd/bdd.json"]
 
           volumeMounts:
             - name: myvolume

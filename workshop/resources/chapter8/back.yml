@@ -1,29 +1,56 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: back
   namespace: formation
   labels:
     app: formation-back
 spec:
-  containers:
-    - name: back
-      image: 810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-back:latest
-      imagePullPolicy: Always
-      ports:
-        - containerPort: 8080
-          name: web
-          protocol: TCP
-      readinessProbe:
-        httpGet:
-          path: /
-          port: web
-          scheme: HTTP
-      livenessProbe:
-        httpGet:
-          path: /
-          port: web
-          scheme: HTTP
+  replicas: 1
+  selector:
+    matchLabels:
+      app: formation-back
+  template:
+    metadata:
+      labels:
+        app: formation-back
+    spec:
+      containers:
+        - name: back
+          image: 810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-back:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: env-config
+          ports:
+            - containerPort: 8080
+              name: web
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: web
+              scheme: HTTP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: web
+              scheme: HTTP
+          volumeMounts:
+            - name: myvolume
+              mountPath: /app/bdd
+      initContainers:
+        - name: create-dir
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /app/bdd/ && echo {\\\"flag\\\": \\\"SECRET_123\\\"} > /app/bdd/bdd.json"]
+
+          volumeMounts:
+            - name: myvolume
+              mountPath: /app/bdd
+      volumes:
+        - name: myvolume
+          persistentVolumeClaim:
+            claimName: myvolume
 ---
 apiVersion: v1
 kind: Service
@@ -42,22 +69,14 @@ spec:
       targetPort: 8080
       protocol: TCP
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: formation-lb
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
+  name: myvolume
 spec:
-  ingressClassName: alb
-  rules:
-    - http:
-        paths:
-        - path: /
-          backend:
-              service:
-                name: back-service
-                port:
-                  number: 80
-          pathType: Prefix
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  resources:
+    requests:
+      storage: 100Mi

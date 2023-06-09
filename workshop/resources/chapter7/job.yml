@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: update-secret
+  namespace: formation
+  labels:
+    app: formation
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: update-secret
+          image: busybox
+          command: [ "sh", "-c", "echo {\\\"flag\\\": \\\"SECRET_456\\\"} > /app/bdd/bdd.json" ]
+          volumeMounts:
+            - name: myvolume
+              mountPath: /app/bdd
+      volumes:
+        - name: myvolume
+          persistentVolumeClaim:
+            claimName: myvolume

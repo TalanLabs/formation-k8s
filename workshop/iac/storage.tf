@@ -18,24 +18,54 @@ resource "aws_iam_policy" "node_efs_policy" {
   description = "Policy for EFKS nodes to use EFS"
 
   policy = jsonencode({
+    "Version": "2012-10-17",
     "Statement": [
       {
+        "Effect": "Allow",
         "Action": [
-          "elasticfilesystem:DescribeMountTargets",
-          "elasticfilesystem:DescribeFileSystems",
           "elasticfilesystem:DescribeAccessPoints",
-          "elasticfilesystem:CreateAccessPoint",
-          "elasticfilesystem:DeleteAccessPoint",
+          "elasticfilesystem:DescribeFileSystems",
+          "elasticfilesystem:DescribeMountTargets",
           "ec2:DescribeAvailabilityZones"
         ],
+        "Resource": "*"
+      },
+      {
         "Effect": "Allow",
+        "Action": [
+          "elasticfilesystem:CreateAccessPoint"
+        ],
         "Resource": "*",
-        "Sid": ""
+        "Condition": {
+          "StringLike": {
+            "aws:RequestTag/efs.csi.aws.com/cluster": "true"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "elasticfilesystem:TagResource"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "StringLike": {
+            "aws:ResourceTag/efs.csi.aws.com/cluster": "true"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": "elasticfilesystem:DeleteAccessPoint",
+        "Resource": "*",
+        "Condition": {
+          "StringEquals": {
+            "aws:ResourceTag/efs.csi.aws.com/cluster": "true"
+          }
+        }
       }
-    ],
-    "Version": "2012-10-17"
-  }
-  )
+    ]
+  })
 }
 
 resource "aws_iam_role" "efs_role" {
@@ -72,6 +102,9 @@ resource "aws_efs_mount_target" "mount" {
   subnet_id = each.key
   for_each = toset(module.vpc.private_subnets )
   security_groups = [aws_security_group.efs.id]
+  depends_on = [
+    module.vpc
+  ]
 }
 
 
@@ -96,6 +129,11 @@ resource "helm_release" "efs" {
     value = "602401143452.dkr.ecr.eu-west-3.amazonaws.com/eks/aws-efs-csi-driver"
   }
 
+  set {
+    name  = "replicaCount"
+    value = "1"
+  }
+
   depends_on = [
     kubernetes_service_account.efs_csi_controller
   ]
@@ -109,8 +147,19 @@ resource "kubernetes_service_account" "efs_csi_controller" {
       "eks.amazonaws.com/role-arn"=aws_iam_role.efs_role.arn
     }
     labels = {
-      "app.kubernetes.io/component" = "controller"
-      "app.kubernetes.io/name" = "efs-csi-controller"
+      "app.kubernetes.io/name" = "aws-efs-csi-driver"
     }
+  }
+}
+
+resource "kubernetes_storage_class" "efs_sc" {
+  metadata {
+    name = "efs-sc"
+  }
+  storage_provisioner = "efs.csi.aws.com"
+  parameters = {
+    provisioningMode = "efs-ap"
+    fileSystemId = aws_efs_file_system.kube.id
+    directoryPerms = "777"
   }
 }
