@@ -19,9 +19,9 @@ spec:
         - name: back
           image: 810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-back:latest
           imagePullPolicy: Always
-          envFrom:
-            - configMapRef:
-                name: env-config
+          env:
+            - name: FLAG
+              value: FLAG_1
           ports:
             - containerPort: 8080
               name: web
@@ -36,21 +36,6 @@ spec:
               path: /
               port: web
               scheme: HTTP
-          volumeMounts:
-            - name: myvolume
-              mountPath: /app/bdd
-      initContainers:
-        - name: create-dir
-          image: busybox
-          command: ["sh", "-c", "mkdir -p /app/bdd/ && echo {\\\"flag\\\": \\\"SECRET_123\\\"} > /app/bdd/bdd.json"]
-
-          volumeMounts:
-            - name: myvolume
-              mountPath: /app/bdd
-      volumes:
-        - name: myvolume
-          persistentVolumeClaim:
-            claimName: myvolume
 ---
 apiVersion: v1
 kind: Service
@@ -68,15 +53,3 @@ spec:
       port: 80
       targetPort: 8080
       protocol: TCP
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: myvolume
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: efs-sc
-  resources:
-    requests:
-      storage: 100Mi

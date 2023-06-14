@@ -2,6 +2,7 @@ const express = require("express");
 const os = require("os");
 const fs = require('fs');
 const cors = require('cors');
+const morgan = require('morgan');
 
 // Constants
 const PORT = process.env.PORT || 8080;
@@ -12,6 +13,7 @@ const app = express();
 console.log("starting app");
 
 app.use(cors());
+app.use(morgan('combined'));
 
 app.get("/", (req, res) => {
     const infos = {
@@ -35,7 +37,7 @@ app.get("/", (req, res) => {
     res.json(infos);
 });
 
-app.get("/flag", (req, res) => {
+app.get("/api/flag", (req, res) => {
     let flag;
     if (process.env.FLAG) {
         flag = process.env.FLAG;

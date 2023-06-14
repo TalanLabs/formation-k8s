@@ -59,10 +59,14 @@ metadata:
   namespace: formation
   labels:
     app: formation-back
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 spec:
   selector:
     app: formation-back
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: web
       port: 80

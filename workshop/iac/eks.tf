@@ -25,10 +25,10 @@ module "eks" {
     # aws-auth configmap
   manage_aws_auth_configmap = true
   aws_auth_users = concat(
-    [for trainer in tolist(data.aws_iam_user.trainers): { userarn = trainer.arn, username = trainer.user_name , groups   = ["system:masters"]}], 
+    [for trainer in tolist(data.aws_iam_user.trainers): { userarn = trainer.arn, username = trainer.user_name , groups   = ["system:masters"]}],
     [for participant in tolist(aws_iam_user.participant): { userarn = participant.arn, username = participant.name , groups   = []}]
   )
-  
+
 
   # Managed Node Groups
   eks_managed_node_group_defaults = {
@@ -60,10 +60,16 @@ module "eks" {
 
 data "aws_eks_cluster" "cluster" {
   name = local.name
+  depends_on = [
+    module.eks.cluster_id
+  ]
 }
 
 data "aws_eks_cluster_auth" "cluster" {
   name = local.name
+  depends_on = [
+    module.eks.cluster_id
+  ]
 }
 
 provider "kubernetes" {
@@ -134,13 +140,17 @@ resource "kubernetes_role_binding" "participant" {
 data "aws_availability_zones" "available" {
 }
 
+locals {
+  private_subnets      = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
 
   name                 = local.name
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
-  private_subnets      = ["10.0.1.0/24", "10.0.2.0/24"]
+  private_subnets      = local.private_subnets
   public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 
   enable_nat_gateway   = true
