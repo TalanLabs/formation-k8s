@@ -19,9 +19,9 @@ spec:
         - name: back
           image: 810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-back:latest
           imagePullPolicy: Always
-          envFrom:
-            - configMapRef:
-                name: env-config
+          env:
+            - name: FLAG
+              value: FLAG_1
           ports:
             - containerPort: 8080
               name: web
@@ -36,20 +36,3 @@ spec:
               path: /
               port: web
               scheme: HTTP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: back-service
-  namespace: formation
-  labels:
-    app: formation-back
-spec:
-  selector:
-    app: formation-back
-  type: ClusterIP
-  ports:
-    - name: web
-      port: 80
-      targetPort: 8080
-      protocol: TCP

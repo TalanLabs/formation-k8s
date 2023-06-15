@@ -3,24 +3,22 @@
 
 ## Objectif
 
-* comprendre les différents types de volumes
-* manipuler les volumes pour stocker des données 
-* manipuler les volumes pour partager des fichier de configuration / secret
+* comprendre les volumes éphémères
+* manipuler les volumes pour partager des fichiers de configuration / secret
 
 
-## Les différents types de volume 
+## Les volumes éphémères 
+
+[Documentation sur les volumes éphémères](https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/) 
+
+C'est un type de volume qui permet d'injecter des fichiers dans un container. Les modifications sur ces fichiers ne seront pas conservées lors d'un restart.
+Il est souvent utilisé pour injecter de la configuration.
 
 
-* volume ephémère vs persistant
-* nombreux storage provider disponbibles
-
-[Documentation sur les volumes K8](https://kubernetes.io/fr/docs/concepts/storage/volumes/) 
+## Mount Path
 
 
-## Volume
-
-
-Partage d'un volume entre containers d'un même pod (ie: sidecar)
+Création d'un point de montage alimenté par une configmap
 
 ```yaml
 apiVersion: v1
@@ -30,132 +28,66 @@ metadata:
 spec:
   containers:
   - image: alpine
-    name: my-pod-1
+    name: my-pod
     command: ['sh', '-c', 'echo Container 1 is Running ; sleep 3600']
     volumeMounts:
     - mountPath: /data
       name: data-volume
 
-  - image: alpine
-    name: my-pod-2
-    command: ['sh', '-c', 'echo Container 2 is Running ; sleep 3600']
-    
-    volumeMounts:
-    - mountPath: /data2
-      name: data-volume
-
-
   volumes:
   - name: data-volume
-    emptyDir: {}
+    configMap:
+      name: config
 ```
 
-Afficher les logs des containers 
+La configmap définissant les fichiers
 
-```bash
-k logs mypod -c my-pod-1 
-
-k logs mypod -c my-pod-2
-```
-
-Ecrire un fichier dans le volume partagé `/data`  depuis `my-pod-1` 
-
-```bash
-k exec -it mypod -c my-pod-1  -- /bin/sh
-
-cd /data
-echo 'hello' > whatever.txt
-```
-
-Lire le contenu depuis le meme volume partagé `/data2`  de `my-pod-2` 
-
-```bash
-k exec -it mypod -c my-pod-2  -- /bin/sh
-
-cd /data2
-cat whatever.txt
-```
-
-
-## Partager un secret via un volume
-
-
-Création d'un certification TLS
-
-```bash
-openssl genrsa -out ssl.key 2048
-openssl req -new -x509 -key ssl.key -out ssl.cert -days 360 -subj /CN=secret-server.example.com
-```
-
-Générer un secret avec ces deux fichiers 
-
-```bash
-k create secret generic ssl-key-cert --from-file=ssl.key --from-file ssl.cert
-```
-
-Informations 
-
-```bash
-k describe secret ssl-key-cert
-
-Name:         ssl-key-cert
-Namespace:    learnk8
-Labels:       <none>
-Annotations:  <none>
-
-Type:  Opaque
-
-Data
-====
-ssl.cert:  1155 bytes
-ssl.key:   1704 bytes
-
-```
-
-
-Utiliser les secets en tant que fichiers montés sur le container 
-
-
-```bash
+```yaml
 apiVersion: v1
-kind: Pod
+kind: ConfigMap
 metadata:
-  name: nginx-pod
-spec:
-  containers:
-    - image: nginx:alpine
-      name: web-server
-      volumeMounts:
-      - name: certs
-        mountPath: /etc/nginx/certs/
-        readOnly: true
-  volumes:
-      - name: certs
-        secret:
-          secretName: ssl-key-cert
+  name: config
+data:
+  whatever.txt: |
+    hello
 ```
 
-Verification 
+Afficher le contenu de `/data`
 
 ```bash
-kubectl exec -it nginx-pod  -- /bin/sh
+k exec -it mypod -- /bin/sh
 
-ls /etc/nginx/certs/
-ssl.cert  ssl.key
+ls /data
+whatever.txt
+
+
+cat /data/whatever.txt
+hello
 ```
-
 
 
 ## Exercices 
 
-* configurer la page d'accueil d'Nginx en montant un volume 
-* partager des données entre plusieurs pods
+Une image a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-front:latest`
+Elle contient un frontend qui expose un endpoint sur le port 3000 sur le path `/`
+
+
+Pour pouvoir appeler le backend, le conteneur a besoin du fichier `/app/build/env.js` dont le contenu est:
+```js
+window.__ENV__ = {
+  BACK_URL: "http://#HOSTNAME_OF_MY_BACKEND#/api"
+}
+```
+
+* créer un déploiement avec une instance du frontend
+* Créer une configmap avec le contenu de env.js
+* ajouter un point de montage sur le path `/app/build`
+* lancer un port-forward sur le port 3000
+* ouvrir http://localhost:3000 sur un navigateur
+* Le flag du backend doit s'afficher
 
 ## A retenir 
 
 * chaque pod est monté avec un volume éphémère, détruit avec le pod
-* le volume permet de persister des données et des les partager
 * il est courant de monter des configmap / secrets dans les containers
-* il existent de multitudes d'abstraction de filesystem (ex Aws S3, Azure Blog, etc)
-
 

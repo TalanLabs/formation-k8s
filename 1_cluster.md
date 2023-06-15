@@ -14,6 +14,7 @@ alias k=kubetcl
 
 > nb: pas requis, mais fait gagner du temps sur des commandes parfois longues..
 
+## Commandes importantes
 
 Aide de kubectl  
 
@@ -38,6 +39,35 @@ Pour lister tous les types de ressources et leur alias
 ```bash
 kubectl api-resources
 ```
+
+Pour lister toutes les ressources existantes (ici, tous les pods) 
+
+```bash
+kubectl get pods
+```
+
+Pour créer ou modifier une ressource en utilisant un fichier de description 
+
+```bash
+kubectl apply -f mypod.yml
+```
+
+Pour supprimer une ressource en utilisant (ici, un pod qui s'appelle mypod) 
+
+```bash
+kubectl delete pod mypod
+```
+
+Pour obtenir des détails sur une ressource (très utile pour le debug) 
+
+```bash
+kubectl describe pod mypod
+```
+
+Pour modifier une ressource, [kubectl patch](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch/)
+avec la spécification [jsonpath](https://jsonpatch.com/)
+
+## Connection au cluster
 
 Kubectl utilise un fichier `~/.kube/config`  pour stocker les informations du cluster 
 

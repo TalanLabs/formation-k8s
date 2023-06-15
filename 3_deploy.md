@@ -10,7 +10,7 @@
 ![Deploy](./medias/module_05_scaling1.svg)
 
 Le déploiement est à un niveau d'abstraction supérieur au pod
-Il permet de gérer le cycle de vie des application en définissant les images, nombre de pods et d'autes paramètres
+Il permet de gérer le cycle de vie des applications en définissant les images, nombre de pods et d'autes paramètres. Il permet aussi de mettre à jour simplement des applications.
 
 ## Déploiement 
 
@@ -18,6 +18,7 @@ Génération d'une configuration pour un déploiement nommé `mynginx` avec une 
 
 ```bash
 k create deployment --image=nginx mynginx --dry-run=client -o yaml > deployment.yaml
+cat deployment.yaml
 ```
 
 ```yaml
@@ -74,7 +75,7 @@ NAME      READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES   SELECTO
 mynginx   1/1     1            1           3m31s   nginx        nginx    app=mynginx
 ```
 
-Pour en savoir plus sur les propriétés utilisés par K8 lors du déploiement 
+Pour en savoir plus sur les propriétés utilisées par K8 lors du déploiement 
 
 ```bash
 k describe deploy mynginx
@@ -120,14 +121,16 @@ Il existe d'autre types de stratégie intéressantes pour déployer une nouvelle
 
 Quelques techniques couramment utilisés: 
 
-* blue/green: la nouvelle version (green) est déployée en même temps que l'actuelle (blue). Un fois déployée, on met à jour le service pour rediriger vers ces versions
-* canary : variante de blue/green où l'on redirige progressivement une partie du trafic vers la nouvelle version
+* blue/green: la nouvelle version (green) est déployée en même temps que l'actuelle (blue). Une fois déployée, on met à jour le service pour rediriger vers ces versions (pas géré nativement par k8s)
+* canary : variante de blue/green où l'on redirige progressivement une partie du trafic vers la nouvelle version (appelé RollingUpdate par k8s)
 * Recreate : Tous les pods sont tués et remplacés par la nouvelle version en même temps...
 
 
 ## Modifier le replicaset
 
-Le déploiement repose sur de `replicaset` qui gère le nombre de pods à maintenir
+Le déploiement repose sur des `replicaset` qui gère le nombre de pods à maintenir
+
+> Dans la littérature, on peut rencontrer des `replicationcontroller`. C'est une version legacy des `replicaset`.
 
 ```bash
 k get replicaset
@@ -286,14 +289,20 @@ k logs -f -l app=mynginx
 
 ## Exercices
 
-* créer un déploiement d'une application node 3 instances 
+Le backend expose un endpoint sur le path `/api/flag` qui retourne la valeur de la variable d'environnement `FLAG`. 
+
+* créer un déploiement pour le back avec une variable d'environnement `FLAG`
 * tuer un pod et vérifier le nombre d'instance 'running'
-* redéployer une nouvelle version de l'image
+* Appeler l'endpoint `/api/flag` en utilisant un conteneur éphémère
+* modifier la valeur de la variable d'environnement `FLAG` avec une commande `kubectl patch` et rappeler l'endpoint
+* afficher l'historique des déploiements
+* annuler la dernière mise à jour et rappeler l'endpoint
+* Régulièrement, regarder les événements produits avec `kubectl describe`
 
 
 ## A retenir
 
-* Nous avons bien des pods déployés avec l'image nginx
+* Nous avons bien des pods déployés
 * la mise à l'échelle est simple et automatique
 
 En revanche, à chaque déploiement, l'ip de nos containers va changer...

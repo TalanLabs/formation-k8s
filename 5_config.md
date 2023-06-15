@@ -171,7 +171,7 @@ spec:
       command: [ "/bin/sh", "-c", "env" ]
       env:
       - name: API_KEY
-          valueFrom:
+        valueFrom:
             secretKeyRef:
               name: apikey
               key: API_KEY
@@ -204,8 +204,11 @@ API_KEY=123–456
 
 ## Exercice
 
-* déployer une base de données (Postgres ou redis) et utiliser les configmap et secrets
-* déployer une application node qui se connecte à la base de données crée 
+* Exporter la variable d'environnement `FLAG` dans une configmap et l'injecter dans le pod
+* Appeler l'endpoint `/api/flag`
+* Modifier la valeur de la variable d'environnement avec la commande `kubectl patch` ou en modifiant le fichier de description de la configmap
+* Le pod retourne l'ancienne variable d'environnement. Pourquoi?
+* Redémarrer le deployment avec la commande `kubectl rollout restart`
 
 
 ## A retenir
