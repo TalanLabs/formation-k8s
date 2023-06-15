@@ -17,18 +17,15 @@ Durée : 2 jours
 
 * [Rappel des bases des containers](./0_container.md)
 * [K8 core contep](./0_k8.md)
-* [Installation du cluster local](./0_setup_local_k8.md)
+* [Prérequis pour EKS](./0_prerequisities_eks.md)
 * [Configuration et outils d'un cluster](./1_cluster.md)
 * [Exécuter des container dans des pods](./2_pod.md)
 * [Déploiement d'un pod](./3_deploy.md)
 * [Service discovery](./4_service.md)
 * [Configmap et secrets](./5_config.md)
 * [Volumes](./6_volumes.md)
-* [Ingress controller](./7_ingress.md)
-* [Kustomize / Kubectx](./8_tools.md)
-
-## CKAD exam
-
-[CKAD exam](./ckad.md)
-
+* [Volumes persistants](./7_persistentvolumes.md)
+* [Ingress controller](./8_ingress.md)
+* [Tooling et écosystème](./9_tools.md)
+* [Sécurité](./10_security.md)
 

@@ -3,11 +3,18 @@
 ## Objectif
 
 * création et manipulation des images via des pods
+* comprendre la différence entre pod et conteneur
 * comprendre la notion de request/limit 
 * comprendre la notion de readiness et liveness
+* appeler un pod avec port-forward
+* débugger un pod en attachant un conteneur éphémère
 
 ![Pod](./medias/module_03_pods.svg)
 
+Le pod est la plus petite unité d'exécution de k8s
+* Un ou plusieurs conteneurs
+* Partage la même adresse ip
+* Peuvent partager des volumes
 
 ## Création d'une ressource Pod
 
@@ -27,9 +34,9 @@ K8 permet de générer des configurations à partir d'une commande CLI avec `--d
 
 ```bash
 k run mypod --image=busybox --dry-run=client -o yaml > pod.yaml
+cat pod.yaml
 ```
 
-cat pod.yaml
 
 ```yaml
 apiversion: v1
@@ -50,13 +57,15 @@ status: {}
 
 ```
 
+Toutes les ressources peuvent être définies par un fichier yaml qui contient à minima les éléments suivants:
+* kind: Le type de ressource
+* metadata: Le nom de la ressource, des labels...
+* spec: La description technique de la ressource. Elle sera différente selon son type
+
 Exécution de la configuration
 
 ```bash
-k create -f pod.yaml
-
-pod/mypod created
-
+k apply -f pod.yaml
 ```
 
 Vérifions les pods créés
@@ -73,6 +82,19 @@ kubectl exec -it mypod -- /bin/sh
 ```
 
 > nb: le shell doit être disponible dans l'image choisie
+
+Exécution d'un conteneur éphémère dans le pod
+
+```bash
+kubectl debug -it mypod --image=busybox
+```
+
+Redirection du port 8080 local vers le port 8080 du pod
+
+```bash
+kubectl port-forward mypod 8080:8080
+```
+
 
 
 ## Liveness / readiness
@@ -186,13 +208,17 @@ mynginx-8689b4976-j6ssb   0m           1Mi
 
 ## Exercices
 
-* créer un pod avec un nom différent de l'image 
-* se connecter au pod et afficher les variables d'environnment
+Une image a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-back:latest`
+Elle contient un backend qui expose un endpoint sur le port 8080 sur le path `/`
+
+* créer un pod 
+* appeler l'endpoint avec un port-forward 
+* lancer un conteneur éphémère et appeler l'endpoint. L'appli répond lorsqu'on appelle localhost ou le nom du conteneur. Pourquoi? 
 * détruire le pod 
 
 ## A retenir 
 
 * Créer un pod n'est pas très différent de la commande Docker ou Podman
-* Définir des chemins HTTP pour déterminer sur le pod est viable est indispensable
+* Définir des chemins HTTP pour déterminer si le pod est viable est indispensable
 * A ce stade, l'intérêt de K8 est plus que discutable 
 
