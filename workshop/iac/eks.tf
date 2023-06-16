@@ -38,8 +38,8 @@ module "eks" {
 
   eks_managed_node_groups = {
     example = {
-      desired_capacity = 1
-      max_capacity     = 3
+      desired_capacity = 2
+      max_capacity     = 5
       min_capacity     = 1
 
       instance_types = ["t3.medium"]

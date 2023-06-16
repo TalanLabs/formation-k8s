@@ -15,3 +15,11 @@ variable "trainers" {
   type = list(string)
   default = ["guillaume.azam", "bertrand.nau"]
 }
+
+
+variable "ingress_hostzone_name" {
+  description = "The name of the DNS zone use for creating custom domain name for ingress controller."
+  type = string
+  default = "k8s.ruche-labs.net"
+}
+
