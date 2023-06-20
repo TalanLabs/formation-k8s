@@ -1,0 +1,3 @@
+username: formation
+flag: FLAG_FROM_HELM
+bddPath: /app/bdd/bdd.json

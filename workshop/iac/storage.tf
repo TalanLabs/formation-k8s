@@ -94,14 +94,34 @@ resource "aws_iam_role_policy_attachment" "efs" {
 }
 
 resource "aws_efs_file_system" "kube" {
-  creation_token = "eks-efs"
+  creation_token = "eks-efs-${replace(each.key, ".", "-")}"
+  for_each = toset(var.participants)
+  tags = {
+    Name = replace(each.key, ".", "-")
+  }
 }
 
+locals {
+  efs = [
+    for efs in aws_efs_file_system.kube : {
+      id = efs.id
+      name = efs.tags.Name
+    }
+  ]
+  efs_subnets = [
+    for pair in setproduct(range(0,length(local.private_subnets)), range(0,length( var.participants))) : {
+      subnet_id = pair[0]
+      participant = pair[1]
+    }
+  ]
+}
 
 resource "aws_efs_mount_target" "mount" {
-  count = length(module.vpc.private_subnets)
-  file_system_id = aws_efs_file_system.kube.id
-  subnet_id = module.vpc.private_subnets[count.index]
+  for_each = {
+    for efs_subnet in local.efs_subnets : "${efs_subnet.subnet_id}-${efs_subnet.participant}" => efs_subnet
+  }
+  file_system_id = local.efs[each.value.participant].id
+  subnet_id = module.vpc.private_subnets[each.value.subnet_id]
   security_groups = [aws_security_group.efs.id]
   depends_on = [
     module.vpc.private_subnets
@@ -155,13 +175,36 @@ resource "kubernetes_service_account" "efs_csi_controller" {
 }
 
 resource "kubernetes_storage_class" "efs_sc" {
+  for_each = toset(var.participants)
   metadata {
-    name = "efs-sc"
+    name = "efs-sc-${replace(each.key, ".", "-")}"
   }
   storage_provisioner = "efs.csi.aws.com"
   parameters = {
     provisioningMode = "efs-ap"
-    fileSystemId = aws_efs_file_system.kube.id
+    fileSystemId = local.efs[index(local.efs.*.name, replace(each.key, ".", "-"))].id
     directoryPerms = "777"
+  }
+}
+
+resource "kubernetes_persistent_volume" "efs_pv" {
+  for_each = toset(var.participants)
+  metadata {
+    name = "efs-pv-${replace(each.key, ".", "-")}"
+  }
+  spec {
+    capacity     = {
+        storage = "100Mi"
+    }
+    volume_mode = "Filesystem"
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_reclaim_policy = "Retain"
+    storage_class_name = "efs-sc-${replace(each.key, ".", "-")}"
+    persistent_volume_source {
+      csi {
+        driver = "efs.csi.aws.com"
+        volume_handle = local.efs[index(local.efs.*.name, replace(each.key, ".", "-"))].id
+      }
+    }
   }
 }

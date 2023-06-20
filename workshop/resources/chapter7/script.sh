@@ -1,4 +1,5 @@
-k apply -f volume.yml
+k get pv efs-pv-stephane-thurneyssen -o yaml
+
 k apply -f back.yml
 k apply -f env-config.yml
 

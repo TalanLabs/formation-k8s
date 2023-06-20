@@ -110,7 +110,7 @@ Le json est de la forme:
 {"flag": "MY_FLAG"}
 ```
 
-* Créer un pv qui utilise 10Mi d'un EFS déjà créé (récupérer l'id dans la console AWS, et choisir son propre path)
+* Un pv qui utilise un EFS a été créé pour chaque utilisateur. Afficher la specification yaml de son pv
 * créer un PVC
 * Dans la configmap du back, ajouter une variable `BDD_PATH`
 * dans le deployment du back, ajouter un initContainer qui créera le json

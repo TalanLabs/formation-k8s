@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-file-for-front
+  namespace: {{ .Release.Namespace }}
+data:
+  env-js: |
+    window.__ENV__ = {
+      BACK_URL: "api"
+    }
+

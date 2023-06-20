@@ -72,10 +72,11 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: myvolume
+  namespace: formation
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: efs-sc
+  storageClassName: efs-sc-formation
   resources:
     requests:
       storage: 100Mi

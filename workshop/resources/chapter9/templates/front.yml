@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: formation-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: formation-front
+  template:
+    metadata:
+      labels:
+        app: formation-front
+    spec:
+      containers:
+        - name: front
+          image: 810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-front:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /app/build/env.js
+              name: env-file-for-front
+              subPath: env-js
+      volumes:
+        - name: env-file-for-front
+          configMap:
+            name: env-file-for-front
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: formation-front
+spec:
+  selector:
+    app: formation-front
+  type: ClusterIP
+  ports:
+    - name: web
+      port: 80
+      targetPort: 3000
+      protocol: TCP
