@@ -43,6 +43,6 @@ Pour un environnement dev:
 ## Exercice: 
 
 * Créer un chart Helm reprenant les ressources précédentes
-* Extraire deux variables: le namespace et l'id de l'EFS
+* Extraire quelques variables, par exemple dans la configmap
 
 S'inspirer de [https://github.com/helm/examples/tree/main/charts/hello-world]()

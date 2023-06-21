@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config
+  namespace: {{ .Release.Namespace }}
+data:
+  FLAG: {{ .Values.flag | quote }}
+  {{- if .Values.bddPath }}
+  BDD_PATH: {{ .Values.bddPath | quote }}
+  {{- end }}

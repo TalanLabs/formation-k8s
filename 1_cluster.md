@@ -28,12 +28,6 @@ Aide sur la ressource Pod
 k explain pods
 ```
 
-Aide sur l'exectution de la commande `run`  d'un pod
-
-```bash
-k run pod --help
-```
-
 Pour lister tous les types de ressources et leur alias 
 
 ```bash
@@ -79,43 +73,6 @@ Kubectl utilise un fichier `~/.kube/config`  pour stocker les informations du cl
 cat ~/.kube/config
 ```
 
-
-## Infos du cluster
-
-
-
-Afficher les infos du cluster
-
-```bash
-k config view
-
-apiVersion: v1
-clusters:
-- cluster:
-    certificate-authority-data: DATA+OMITTED
-    server: https://10.0.0.10:6443
-  name: kubernetes
-contexts:
-- context:
-    cluster: kubernetes
-    user: kubernetes-admin
-  name: kubernetes-admin@kubernetes
-current-context: kubernetes-admin@kubernetes
-```
-
-
-Check cluster infos / IP 
-
-
-```bash
-k cluster-info
-
-
-Kubernetes control plane is running at https://10.0.0.10:6443
-CoreDNS is running at https://10.0.0.10:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-```
 
 ## Namespace
 
@@ -181,12 +138,6 @@ No resource quota.
 No LimitRange resource.
 ```
 
-
-Utilisation du context pour basculer vers le namespace `learnk8` par défaut 
-
-```bash
-k config set-context --current --namespace=learnk8
-```
 
 Vérifer le contexte et cluster courant
 

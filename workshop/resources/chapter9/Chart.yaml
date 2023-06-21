@@ -1,0 +1,7 @@
+apiVersion: v2
+name: formation
+description: A sample application to run in Kubernetes
+
+type: application
+
+version: 0.1.0

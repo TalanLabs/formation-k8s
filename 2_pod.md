@@ -75,6 +75,12 @@ k get pods -o wide
 ```
 
 
+Afficher les logs d'un pod pod
+
+```bash
+kubectl logs mypod
+```
+
 Execution d'une commande dans le pod
 
 ```bash
