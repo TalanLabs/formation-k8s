@@ -26,7 +26,7 @@ module "eks" {
   manage_aws_auth_configmap = true
   aws_auth_users = concat(
     [for trainer in tolist(data.aws_iam_user.trainers): { userarn = trainer.arn, username = trainer.user_name , groups   = ["system:masters"]}],
-    [for participant in tolist(aws_iam_user.participant): { userarn = participant.arn, username = participant.name , groups   = []}]
+    [for participant in tolist(data.aws_iam_user.participants): { userarn = participant.arn, username = participant.user_name, groups   = []}]
   )
 
 
@@ -103,14 +103,20 @@ resource "kubernetes_role" "participant" {
     namespace = replace(var.participants[count.index], ".", "-")
   }
   rule {
-    api_groups     = [""]
+    api_groups     = ["*"]
     resources      = ["*"]
     verbs          = ["*"]
   }
+}
+
+resource "kubernetes_cluster_role" "readonly" {
+  metadata {
+    name =  "readonly"
+  }
   rule {
-    api_groups     = [""]
+    api_groups     = ["*"]
     resources      = ["*"]
-    verbs          = ["*"]
+    verbs          = ["get", "list", "watch"]
   }
 }
 
@@ -123,13 +129,31 @@ resource "kubernetes_role_binding" "participant" {
   }
   subject {
     kind      = "User"
-    name      = replace(var.participants[count.index], ".", "-")
+    name      = var.participants[count.index]
     api_group = "rbac.authorization.k8s.io"
   }
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "Role"
     name      = replace(var.participants[count.index], ".", "-")
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "participant_readonly" {
+  count = length(var.participants)
+  metadata {
+    name =  "${replace(var.participants[count.index], ".", "-")}-readonly"
+  }
+  subject {
+    kind      = "User"
+    name      = var.participants[count.index]
+    api_group = "rbac.authorization.k8s.io"
+    namespace = replace(var.participants[count.index], ".", "-")
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "readonly"
   }
 }
 

@@ -13,6 +13,7 @@ Exécuter:
 ```
 export AWS_PROFILE=#MY_PROFILE_NAME#
 aws eks update-kubeconfig --name formation-eks --region eu-west-3
-kubectl config set-context --current --namespace=#PRENOM.NOM#
+kubectl config set-context --current --namespace=#PRENOM-NOM#
 ```
 
+> Par exemple: `kubectl config set-context --current --namespace=bertrand-nau`

@@ -1,1 +1,1 @@
-helm install -f values.yml formation .
+helm upgrade --install -f values.yml formation .

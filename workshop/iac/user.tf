@@ -25,16 +25,13 @@ resource "aws_iam_group_policy_attachment" "user_change_password" {
   policy_arn = data.aws_iam_policy.user_change_password.arn
 }
 
-# add IAM user to participants group
-
-resource "aws_iam_user" "participant" {
+data "aws_iam_user" "participants" {
   count = length(var.participants)
-  name = var.participants[count.index]
+  user_name = var.participants[count.index]
 }
-
 
 resource "aws_iam_user_group_membership" "participant" {
   count = length(var.participants)
-  user = aws_iam_user.participant[count.index].name
+  user = var.participants[count.index]
   groups = [ aws_iam_group.participant.name ]
 }
