@@ -223,14 +223,7 @@ Elle contient un backend qui expose un endpoint sur le port `3000` sur le path `
 * appeler l'endpoint avec un port-forward 
 * lancer un conteneur éphémère et appeler l'endpoint. L'appli répond lorsqu'on appelle localhost ou le nom du conteneur. Pourquoi? 
 
-####  backend
-
-L'image du `backend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-back:latest`
-Elle contient un backend qui expose un endpoint sur le port `3000` sur le path `/version`
-
-* créer un pod 
-* appeler l'endpoint avec un port-forward 
-* lancer un conteneur éphémère et appeler l'endpoint. L'appli répond lorsqu'on appelle localhost ou le nom du conteneur. Pourquoi? ####  backend
+####  frontend
 
 L'image du `frontend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-front:latest`
 Elle contient un backend qui expose un endpoint sur le port `8080` sur le path `/`
