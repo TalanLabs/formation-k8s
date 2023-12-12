@@ -289,14 +289,18 @@ k logs -f -l app=mynginx
 
 ## Exercices
 
-Le backend expose un endpoint sur le path `/api/flag` qui retourne la valeur de la variable d'environnement `FLAG`. 
+L'image du `frontend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-front:latest`
+Elle contient un backend qui expose un endpoint sur le port `8080` sur le path `/`.
 
-* créer un déploiement pour le back avec une variable d'environnement `FLAG`
-* tuer un pod et vérifier le nombre d'instance 'running'
-* Appeler l'endpoint `/api/flag` en utilisant un conteneur éphémère
-* modifier la valeur de la variable d'environnement `FLAG` avec une commande `kubectl patch` et rappeler l'endpoint
+
+L'image du `backend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-back:latest`
+Elle contient un backend qui expose un endpoint sur le port `3000` sur le path `/version`
+
+* créer un déploiement pour le back
+* créer un déploiement pour le front
+* tuer un pod et vérifier le nombre d'instance `running` (sur le back ou le front)
 * afficher l'historique des déploiements
-* annuler la dernière mise à jour et rappeler l'endpoint
+* annuler la dernière mise à jour et rappeler l'endpoint (sur le back ou le front)
 * Régulièrement, regarder les événements produits avec `kubectl describe`
 
 

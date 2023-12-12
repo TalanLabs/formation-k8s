@@ -1,15 +1,23 @@
-k apply -f back.yml
+kubectl apply -f back.yml
+kubectl get po back -o json
 
-k port-forward back 8080:8080
-curl http://localhost:8080/
+kubectl port-forward back 3000:3000
+curl http://localhost:3000/version
 
 
-k debug -it back --image=busybox
-wget -qO- http://localhost:8080/
+kubectl apply -f front.yml
+kubectl get po front -o json
+
+kubectl port-forward front 8080:8080
+curl http://localhost:8080
+
+
+kubectl debug -it back --image=busybox
+wget -qO- http://localhost:3000/
 ping back
 ifconfig
-wget -qO- http://back:8080/
+wget -qO- http://back:3000/
 
-k get po back -o json
 
-k delete po back
+kubectl delete po back
+kubectl delete po front

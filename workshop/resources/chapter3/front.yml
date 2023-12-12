@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: back
+  name: front
   labels:
-    app: chatroulette-back
+    app: chatroulette-front
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chatroulette-back
+      app: chatroulette-front
   template:
     metadata:
       labels:
-        app: chatroulette-back
+        app: chatroulette-front
     spec:
       containers:
-        - name: back
-          image: 810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-back:latest
+        - name: front
+          image: 810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-front:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 8080
               name: web
               protocol: TCP
           readinessProbe:
             httpGet:
-              path: /version
+              path: /
               port: web
               scheme: HTTP
           livenessProbe:
             httpGet:
-              path: /version
+              path: /
               port: web
               scheme: HTTP

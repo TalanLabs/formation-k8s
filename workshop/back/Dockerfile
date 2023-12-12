@@ -1,14 +1,18 @@
-# The build image
-FROM node:lts-alpine AS build
-WORKDIR /app
-COPY package*.json /app
-COPY . /app
-RUN npm ci 
- 
-# The production image
-FROM node:lts-alpine
-WORKDIR /app
-USER node
-EXPOSE 8080
-COPY --chown=node:node --from=build /app /app
-CMD ["node", "index.js"]
+FROM node:latest as Build
+
+WORKDIR /backend
+
+COPY . .
+RUN npm i
+RUN npm run build
+
+
+FROM node:latest as Run
+
+WORKDIR /backend
+
+COPY --from=build ./backend .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]

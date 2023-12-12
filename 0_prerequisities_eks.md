@@ -55,7 +55,7 @@ Dans un terminal, exécuter:
 
 ```
 export AWS_PROFILE=talan_formation
-aws eks update-kubeconfig --name formation-eks --region eu-west-3
+aws eks update-kubeconfig --name k8-chatroulette --region eu-west-3
 kubectl config set-context --current --namespace=#PRENOM-NOM#
 ```
 
