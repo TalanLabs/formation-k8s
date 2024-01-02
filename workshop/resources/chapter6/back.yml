@@ -40,18 +40,4 @@ spec:
               name: chat-images
       volumes:
         - name: chat-images
-          persistentVolumeClaim:
-            claimName: chat-images
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: chat-images
-  namespace: formation
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: efs-sc-formation
-  resources:
-    requests:
-      storage: 100Mi
+

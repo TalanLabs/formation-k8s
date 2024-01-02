@@ -68,23 +68,21 @@ hello
 
 ## Exercices 
 
-Une image a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/formation-k8s-front:latest`
-Elle contient un frontend qui expose un endpoint sur le port 3000 sur le path `/`
+L'image du `frontend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-front:latest`
+Elle contient un backend qui expose un endpoint sur le port `8080` sur le path `/`.
 
 
-Pour pouvoir appeler le backend, le conteneur a besoin du fichier `/app/build/env.js` dont le contenu est:
-```js
-window.__ENV__ = {
-  BACK_URL: "http://#HOSTNAME_OF_MY_BACKEND#/api"
-}
-```
+L'image du `backend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-back:latest`
+Elle contient un backend qui expose un endpoint sur le port `3000` sur le path `/version`
 
-* créer un déploiement avec une instance du frontend
-* Créer une configmap avec le contenu de env.js
-* ajouter un point de montage sur le path `/app/build`
-* lancer un port-forward sur le port 3000
-* ouvrir http://localhost:3000 sur un navigateur
-* Le flag du backend doit s'afficher
+L'application `backend` possede deux variables d'environment permettant de sauvegarder les images sur disque: `APP_STORAGE`  et `DB_DIRECTORY`
+
+* créer un déploiement pour le back
+* créer un déploiement pour le front
+* créer un config map configurant les variables d'environments avec les valeurs `APP_STORAGE=fs` et `DB_DIRECTORY=/images` 
+* ajouter un point de montage sur le path `/images`
+* lancer un port-forward sur le port 8080
+* ouvrir http://localhost:8080 sur un navigateur
 
 ## A retenir 
 

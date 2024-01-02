@@ -4,4 +4,4 @@ metadata:
   name: env-config
   namespace: formation
 data:
-  FLAG: FLAG_FROM_CONFIG
+  VERSION: 1.0.0

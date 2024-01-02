@@ -204,8 +204,13 @@ API_KEY=123–456
 
 ## Exercice
 
-* Exporter la variable d'environnement `FLAG` dans une configmap et l'injecter dans le pod
-* Appeler l'endpoint `/api/flag`
+L'image du `backend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-back:latest`
+Elle contient un backend qui expose un endpoint sur le port `3000` sur le path `/version`
+
+Le endpoint `/version` lit la variable environment `APP_VERSION`.
+
+* Exporter la variable d'environnement `APP_VERSION` dans une configmap et l'injecter dans le pod `backend` 
+* Appeler l'endpoint `/version`
 * Modifier la valeur de la variable d'environnement avec la commande `kubectl patch` ou en modifiant le fichier de description de la configmap
 * Le pod retourne l'ancienne variable d'environnement. Pourquoi?
 * Redémarrer le deployment avec la commande `kubectl rollout restart`

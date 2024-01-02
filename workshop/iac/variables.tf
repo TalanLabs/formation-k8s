@@ -7,7 +7,7 @@ variable "region" {
 variable "participants" {
   description = "List of workshop's participant"
   type  = list(string)
-  default = ["guillaume.azam", "charaf.zellou", "medhi.ouabbou", "caroline.guedj", "tyler.boyeka", "yacine.bengharsallah", "stephane.thurneyssen", "oussama.shili", "vincent.rojo"]
+  default = ["guillaume.azam", "charaf.zellou", "medhi.ouabbou", "caroline.guedj", "tyler.boyeka", "yacine.bengharsallah", "oussama.shili"]
 }
 
 

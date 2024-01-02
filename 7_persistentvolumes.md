@@ -104,18 +104,19 @@ spec:
 
 ## Exercices 
 
-Notre backend peut récupérer le flag depuis un fichier json, dont le path est spécifié dans la variable d'environnement `BDD_PATH`. 
-Le json est de la forme:
-```json
-{"flag": "MY_FLAG"}
-```
+L'image du `frontend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-front:latest`
+Elle contient un backend qui expose un endpoint sur le port `8080` sur le path `/`.
+
+
+L'image du `backend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-back:latest`
+Elle contient un backend qui expose un endpoint sur le port `3000` sur le path `/version`
+
+L'application `backend` possede deux variables d'environment permettant de sauvegarder les images sur disque: `APP_STORAGE`  et `DB_DIRECTORY`
 
 * Un pv qui utilise un EFS a été créé pour chaque utilisateur. Afficher la specification yaml de son pv
 * créer un PVC
-* Dans la configmap du back, ajouter une variable `BDD_PATH`
-* dans le deployment du back, ajouter un initContainer qui créera le json
-* Partager le json avec un volume partagé, en passant par le PVC
-* Verifier que le nouveau flag est retourné par l'endpoint `/api/flag`
+* Dans la configmap du back, ajouter une variable `APP_STORAGE` (resp `DB_DIRECTORY`) avec la valeur `fs` (resp `/images`).
+* Ajouter le pv au deployment du `backend` sur le mount path `/images`
 
 > Ne pas hésiter à utiliser la commande `kubectl exec` pour explorer le filesystem des pods
 

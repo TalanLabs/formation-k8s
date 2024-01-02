@@ -152,8 +152,12 @@ Mappe le service au contenu du champ externalName (par exemple foo.bar.example.c
 
 ## Exercices 
 
-* exposer l'application sur le port 80 avec un service de type `ClusterIp`
-* Appeler l'endpoint `/api/flag` avec un conteneur éphémère
+L'image du `backend` de l'application a été déployée sur un registry ECR. Son nom est: `810454728139.dkr.ecr.eu-west-3.amazonaws.com/k8-chatroulette-back:latest`
+Elle contient un backend qui expose un endpoint sur le port `3000` sur le path `/version`
+
+* créer un déploiement pour le back
+* exposer l'application `backend` sur le port 80 avec un service de type `ClusterIp`
+* Appeler l'endpoint `/version` avec un [conteneur éphémère](https://medium.com/linux-shots/debug-kubernetes-pods-using-ephemeral-container-f01378243ff)
 * Supprimer le service
 
 ## A retenir
